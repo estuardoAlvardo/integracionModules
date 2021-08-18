@@ -17,6 +17,7 @@ switch ($evento) {
 			$insertarServicio->bindParam(':descripcion', $_POST['txtDescripcion'], PDO::PARAM_STR); 
 			$insertarServicio->bindParam(':monto', $_POST['txtMonto'], PDO::PARAM_INT); 
 			$insertarServicio->bindParam(':cortesia', $_POST['txtCortesia'], PDO::PARAM_STR); 
+     
 			$insertarServicio->execute();	
 
 
@@ -33,6 +34,7 @@ switch ($evento) {
 			$actualizarServicio->bindParam(':monto', $_POST['modMonto'], PDO::PARAM_STR); 
 			$actualizarServicio->bindParam(':cortesia', $_POST['modCortesia'], PDO::PARAM_STR); 
 			$actualizarServicio->bindParam(':idservicio', $_POST['idActualizar'], PDO::PARAM_STR);
+
 			$actualizarServicio->execute();
 
 		
@@ -122,12 +124,15 @@ switch ($evento2) {
   case 1:
 
   //insercion de paquete
-      $queryInsertar = ("INSERT INTO paquete (idpaquete, nombrePaquete, totalPaquete, descuento) VALUES(:idpaquete, :nombrePaquete, :totalPaquete, :descuento)");
+      $queryInsertar = ("INSERT INTO paquete (idpaquete, nombrePaquete, totalPaquete, descuento,idCuentaPrincipal,idCuenta,idSubCuenta) VALUES(:idpaquete, :nombrePaquete, :totalPaquete, :descuento,:idCuentaPrincipal,:idCuenta,:idSubCuenta)");
       $insertarPaquete = $dbConn->prepare($queryInsertar);
       $insertarPaquete->bindParam(':idpaquete', $_POST['txtidPaqueteRegistro'], PDO::PARAM_INT); 
       $insertarPaquete->bindParam(':nombrePaquete', $_POST['txtNombrePaquete'], PDO::PARAM_STR); 
       $insertarPaquete->bindParam(':totalPaquete', $_POST['txtTotalPaquete'], PDO::PARAM_INT); 
       $insertarPaquete->bindParam(':descuento', $_POST['txtDescuento'], PDO::PARAM_INT); 
+      $insertarPaquete->bindParam(':idCuentaPrincipal', $_POST['cuentaPrincipal'], PDO::PARAM_INT); 
+      $insertarPaquete->bindParam(':idCuenta', $_POST['selectSubcuenta'], PDO::PARAM_INT); 
+      $insertarPaquete->bindParam(':idSubCuenta', $_POST['conceptos'], PDO::PARAM_INT); 
       $insertarPaquete->execute(); 
 
  

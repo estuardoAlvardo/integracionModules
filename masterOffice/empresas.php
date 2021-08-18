@@ -86,7 +86,6 @@ $q1 = ("SELECT * FROM empresa where estado=1");
 
 
 
-
 ?>
 
 <!DOCTYPE html>
@@ -741,7 +740,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
     </footer>
 
 
-<p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
+<p id="uriEnviar" style="display: block;"><?php echo $_SESSION['uri']; ?></p>
 
 <script type="text/javascript">
     

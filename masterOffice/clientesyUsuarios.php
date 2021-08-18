@@ -521,7 +521,10 @@ switch ($row1["periodo"]) {
                       </p>
                       <div class="row">
                       <a class="waves-effect indigo darken-2 btn-small" href="<?php echo 'misServicios.php?user='.$row1['idempresa']; ?>">Servicios</a>
-                      <a class="waves-effect indigo darken-2 btn-small" href="<?php echo 'estadoCuenta.php?user='.$row1['idempresa'].'&acount='.$row1['razonSocial']; ?>">Estado de cuenta</a>
+                      <a class="waves-effect indigo darken-2 btn-small" href="<?php echo 'estadoCuenta.php?user='.$row1['idempresa'].'&acount='.$row1['razonSocial']; ?>">Resumen de cuenta</a>
+                      
+                      <a class="waves-effect indigo darken-2 btn-small" href="<?php echo 'estadoCuentaDetalle.php?user='.$row1['idempresa'].'&acount='.$row1['razonSocial']; ?>">Estado Cuenta</a>
+
                       <a class="waves-effect pink darken-3 btn-small" style="margin-top: 20px;" href="<?php echo 'misUsuarios.php?user='.$row1['idempresa']; ?>">Usuarios Asignados</a>
                       <a class="waves-effect pink darken-3 btn-small" href="<?php echo 'miArchivo.php?user='.$row1['idempresa']; ?>" style="margin-top: 20px;">Archivo</a>
                      

@@ -376,7 +376,9 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                 <label for="autocomplete">Buscar Cliente</label>
               </div>
             </div>
-              
+                  
+                  <div class="salida2"></div>
+
                  <div class="row salida">
                    
                  </div>
@@ -513,12 +515,13 @@ while ($consultar1=$buscarPagos1->fetch(PDO::FETCH_ASSOC)){ ?>
 
 
     <p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
+    <p id="idEmpresaEnviar" style="display: none;"><?php echo $_SESSION['empresa']; ?></p>
 
     <script type="text/javascript">
 
    $(document).ready(function () {
     $('#modal1').modal();
-     $('select').formSelect();
+    // $('#select').formSelect();
 });
    
 var uri1 = $("#uriEnviar").text();
@@ -559,8 +562,24 @@ var noDocumento=$("#"+clicked_id+"txtDocumentoPago").val();
 var monto=$("#"+clicked_id+"txtMonto").val();
 var eventoEjecutar=$("#"+clicked_id+"eventoEjecutar").val();
 
+//abono cuenta abono por cobrar
+var cuentaPrincipalAbono=$('#cuentaPrincipalAbono').val();
+var cuentaCuentaAbono=$('#selectSubcuentaAbono').val();
+var subCuentaAbono=$('#conceptosAbono').val();
+var abonoCuentaPorCobrar=1;
+var cargoCuentaPorCobrar=0;
 
-//alert("idCliente "+idCliente+" noFactura "+noFactura+" fechaPago "+fechaPago+" noDocumento "+noDocumento+" monto "+monto+ " eventoEjecutar "+eventoEjecutar );
+//cuenta abono ingresos
+var cuentaPrincipal=$('#cuentaPrincipal').val();
+var cuentaCuenta=$('#selectSubcuenta').val();
+var subCuenta=$('#conceptos').val();
+var abonoCuentaIngreso=1;
+var cargoCuentaIngreso=0;
+
+var idEmpresaMaestra=$('#idEmpresaEnviar').text();
+
+
+//alert("idCliente "+idCliente+" noFactura "+noFactura+" fechaPago "+fechaPago+" noDocumento "+noDocumento+" monto "+monto+ " eventoEjecutar "+eventoEjecutar+' cuenta principal abono cobrar '+cuentaPrincipalAbono+' cuentaCuentaAbono '+cuentaCuentaAbono+' subCuentaAbono '+subCuentaAbono+' cuentaPrincipal Ingreso '+cuentaPrincipal+' cuenta Ingreso '+cuentaCuenta+' subCuenta Ingreso '+subCuenta+' idEmpresaMaestra'+idEmpresaMaestra);
 
 
        
@@ -575,11 +594,23 @@ var eventoEjecutar=$("#"+clicked_id+"eventoEjecutar").val();
         "fechaPago": fechaPago,
         "noDocumento": noDocumento,
         "monto": monto,
-        "eventoEjecutar": eventoEjecutar
+        "eventoEjecutar": eventoEjecutar,
+        "cuentaPrincipalAbono": cuentaPrincipalAbono,
+        "cuentaCuentaAbono": cuentaCuentaAbono,
+        "subCuentaAbono": subCuentaAbono,
+        "abonoCuentaPorCobrar": abonoCuentaPorCobrar,
+        "cargoCuentaPorCobrar": cargoCuentaPorCobrar,
+        "cuentaPrincipalIngreso": cuentaPrincipal,
+        "cuentaCuentaIngreso": cuentaCuenta,
+        "subCuentaIngreso": subCuenta,
+        "abonoCuentaIngreso": abonoCuentaIngreso,
+        "cargoCuentaIngreso": cargoCuentaIngreso,
+        "idEmpresaMaestra": idEmpresaMaestra
+
 
       },
         success:function(r){
-          
+           // $('.salida2').html(r);
             M.toast({html: 'Se ha registrado el pago de manera correcta :)', classes: 'rounded'});
             
         }
@@ -593,111 +624,102 @@ var eventoEjecutar=$("#"+clicked_id+"eventoEjecutar").val();
 }
 
 
-//funcion para guardar registro Llamadas
+ //buscamos subcuentaPrincipal
 
-function crearRegistro(){
+                       function buscarSubcuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+                      //  alert('idCuentaPrincipal'+idCuentaPrincipal);
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
 
-    var datosGuardar= $("#formularioRegistro").serialize();
-      //alert(datosGuardar);
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Llamada registrada :)', classes: 'rounded'});
-            
-        }
+                            success:function(r){
 
-      });
+                              $("#selectSubcuenta").html(r);
 
-}
+                         
+                            }
 
+                          });
 
-function registrarPedido(){
-
-  var datosGuardar= $("#formularioPedido").serialize();
-
-   $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Pedido creado de manera correcta! :)', classes: 'rounded'});
-            
-        }
-
-      });
+                    }
 
 
-}
+                    function buscarCuentaCuenta(idCuentaPrincipal,tipoCuenta){
 
-function registrarCita(){
-   var datosGuardar= $("#formularioCita").serialize();
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
 
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Cita Agendada! :)', classes: 'rounded'});
-            
-        }
+                            success:function(r){
 
-      });
+                              $("#selectSubcuenta2").html(r);
+                           //$(".salida").html(r);
 
+                         
+                            }
 
+                          });
 
-}
+                    }
 
-function registrarLogistica(){
-     var datosGuardar= $("#formularioLogistica").serialize();
-
-     //alert(datosGuardar);
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Se genero evento de logistica!! :)', classes: 'rounded'});
-            
-        }
-
-      });
+                       function buscarCuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
 
 
-}
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
 
+                            success:function(r){
 
- function mostrarRegistroLlamadas(){
-      var registroLlamadas= $.ajax({
-        url: uri1+"controller/staticLateralIzquierdoC.php",
-        dataType: "text",
-        async: false
+                              $("#conceptos").html(r);
 
-      }).responseText;
-      document.getElementById('registroLllamadasMostrar').innerHTML = registroLlamadas;
+                         
+                            }
 
-    }
-    setInterval(mostrarRegistroLlamadas,1000);
+                          });
 
+                    }
 
- function mostrarEventos(){
-      var registroEventos= $.ajax({
-        url: uri1+"controller/staticLateralDerechoEventoC.php",
-        dataType: "text",
-        async: false
+                    function crearCuenta(){
 
-      }).responseText;
-      document.getElementById('registroEventos11').innerHTML = registroEventos;
+                       var datosGuardar= $("#crearCuenta").serialize();
+                      // alert(datosGuardar);
+                       
+                       $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: datosGuardar,
 
-    }
-    setInterval(mostrarEventos,1000);
+                            success:function(r){
 
+                             // $(".salida").html(r);
+                              swal("Se creo la cuenta!", "felicidades!", "success");
 
+                                setInterval(function(){
+                                location.reload();
+
+                             },1000);
+
+                            }
+
+                          });
+                        
+
+                    }
 
 
     </script>

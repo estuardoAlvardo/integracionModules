@@ -736,7 +736,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
       <table class="striped ">
         <thead>
           <tr>
-              <th>Cargos del mes</th>
+              <th>Cargos del mes servicios+</th>
               <th>Precio</th>
           </tr>
         </thead>
@@ -763,7 +763,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
   <?php } ?>
           <tr>
             <td >Subtotal mes actual:</td>
-            <td><?php echo 'Q'.sprintf("%.2f", $totalExtras); ?></td>
+            <td><?php echo 'Q'.sprintf("%.2f", @$totalExtras); ?></td>
           </tr>
 
 
@@ -792,7 +792,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
 
           <tr>
           <td>Total Cargos Mes</td>
-          <td><?php $totalCargo=$totalExtras; echo 'Q.'.$totalCargo; ?></td>
+          <td><?php $totalCargo=@$totalExtras; echo 'Q.'.$totalCargo; ?></td>
           </tr>
 
         </tbody>
@@ -817,7 +817,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   <li class="divider mt-2 mb-2"></li>
                   <li class="display-flex justify-content-between">
                     <span class="invoice-subtotal-title">Total a Pagar</span>
-                    <h6 class="invoice-subtotal-value"><span style="font-size:18pt;">Q.<span><?php $totalFinal=$saldoAnterior+$totalExtras-$abonosMes; echo $totalFinal ?></h6>
+                    <h6 class="invoice-subtotal-value"><span style="font-size:18pt;">Q.<span><?php $totalFinal=$saldoAnterior+@$totalExtras-$abonosMes; echo $totalFinal ?></h6>
                   </li>
                   <li class="display-flex justify-content-between">
                 </ul>

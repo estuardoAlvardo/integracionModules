@@ -32,6 +32,7 @@ while ($row=$obtenerUsuario->fetch(PDO::FETCH_ASSOC)){
 	$_SESSION["correo"]=$row['correo'];
 	$_SESSION["password"]=$row['contrasena'];
 	$_SESSION['uri']='http://localhost:8888/asistentevirtual/';
+	$_SESSION['uriLocal']='http://localhost:8888/asistentevirtual/';
 
 
 	
@@ -96,7 +97,7 @@ switch ($_SESSION["privilegio"]) {
 
 
 
-		header("https:officient.biz/masterOffice/panelControl.php");
+		header("Location:http://localhost:8888/asistentevirtual/masterOffice/panelControl.php");
 
 		break;
 
@@ -124,7 +125,7 @@ switch ($_SESSION["privilegio"]) {
 		$_SESSION['inicio']=2;
 
 
-		header("https:officient.biz/masterOffice/panelControl.php");
+		header("Location:http://localhost:8888/asistentevirtual/masterOffice/panelControl.php");
 		break;
 
 
@@ -153,7 +154,7 @@ switch ($_SESSION["privilegio"]) {
 
 
 
-		header("https:officient.biz/masterOffice/panelControl.php");
+		header("Location:http://localhost:8888/asistentevirtual/masterOffice/panelCliente.php");
 
 		
 		break;
@@ -163,7 +164,7 @@ switch ($_SESSION["privilegio"]) {
 	
 	
 	default:
-	    header("location:../index.php");
+	    header("Location:../index.php");
 		break;
 }
 
@@ -171,7 +172,7 @@ switch ($_SESSION["privilegio"]) {
 
 }else{
 
-			header("https:officient.biz/masterOffice/panelControl.php");
+			header("Location:http://localhost:8888/asistentevirtual/masterOffice/panelControl.php");
 
 }
 // en la base de datos el tipo de usuario se toma como 1=alumno 2=profesor 3=coordinador

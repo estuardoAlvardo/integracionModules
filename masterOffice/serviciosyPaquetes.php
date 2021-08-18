@@ -377,12 +377,12 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <!-- START CONTENT -->
         <section id="content">
 
+  <div class="salida"></div>
 
 
             <h4 class="center">Paquetes<br><br> <a class="btn-floating btn-large waves-effect indigo darken-4 modal-trigger" href="#modal4"><i class="material-icons" onclick="crearPaquete();">add</i></a> <a class="waves-effect waves-light btn-large" href="#aquiServicio"><i class="material-icons left">arrow_downward</i>Servicios</a>
 </h4>
 
-  
  <div class="row">
 
 <?php 
@@ -453,6 +453,14 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
              
            </div>
 
+<?php
+//buscamos cuentasPrincipales 2
+  $query26 = ("SELECT * FROM contaCuentaPrincipal");
+  $cuentaPrincipal6 = $dbConn->prepare($query26);
+  $cuentaPrincipal6->execute();
+  $hayCuentas6=$cuentaPrincipal6->rowCount();
+
+ ?>
 
 
 <!-- Modal Crear paquete -->
@@ -526,12 +534,47 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                                                                       
                                   </tr>
                                   <?php } ?> 
+
+
+
                                 </tbody>
                               </table>
                            
 
                            
                           </div>
+
+                        <p style="text-align: center; font-size: 16pt;">Seleccione la cuenta por cobrar</p>
+
+                    <select class="form-control" name="cuentaPrincipal" id="cuentaPrincipal" required>
+                           <option>Selecciona Cuenta Principal</option>
+
+                      <?php 
+                          if($hayCuentas6==0){   
+                      ?>
+                       <option value="0">No hay cuentas!</option>
+                     <?php  }else{   ?>
+
+                     <?php while ($datosCuentaPrincipal2=$cuentaPrincipal6->fetch(PDO::FETCH_ASSOC)){  ?>
+
+                    <option  value="<?php echo $datosCuentaPrincipal2['idRegistro']; ?>"><?php echo $datosCuentaPrincipal2['nomenclatura'].' '.$datosCuentaPrincipal2['cuentaPrincipal']; ?></option>
+
+
+                       <?php } } ?>     
+                          </select><br>
+
+                          <select class="browser-default" name="selectSubcuenta" id="selectSubcuenta" required>
+                            <option>Selecciona una cuenta</option>
+                          </select><br>
+
+
+                          <select class="browser-default" name="conceptos" id="conceptos" required>
+                                                        <option>Selecciona una Sub-Cuenta</option>
+
+                           </select><br>
+
+
+
 
                           <div class="row">
                             <div class="row">
@@ -815,6 +858,9 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
      }
 
 
+
+
+
      function insertarDatos11(){
       //datos los traemos con el formulario y con la propiedad serialize traemos todos los datos del formulario por el name
       var datosGuardar= $("#insertarServicio").serialize();
@@ -917,18 +963,20 @@ function crearPaquete(){
 
 function insertarPaquete(){
       var datosGuardar= $("#insertarPaquete").serialize();
-   //   alert(datosGuardar);
-      $.ajax({
+    // alert(datosGuardar);
+     $.ajax({
         type: "POST",
         url: uri1+"controller/serviciosyPaquetesC.php",
         data: datosGuardar,
         success:function(r){
-          
-            M.toast({html: 'Se ha actualizado de manera correcta :)', classes: 'rounded'});
+         // $('.salida').html(r);
+           M.toast({html: 'Se ha creo paquete de manera correcta :)', classes: 'rounded'});
             
         }
 
       });
+  
+      
 
 }
 
@@ -958,6 +1006,154 @@ function insertarPaquete(){
 
     }
     setInterval(mostrarEventos,1000);
+
+
+//funciones para agregar cuenta por cobrar
+
+                     $(document).ready(function() {
+                       $("select[name=cuentaPrincipal]").change(function(){
+                       var idCuentaPrincipal = $('select[name=cuentaPrincipal]').val();
+                       //alert(idCuentaPrincipal);
+                       buscarSubcuentas(idCuentaPrincipal,1);
+                        });
+
+                     });
+
+                      
+
+                       $(document).ready(function(){
+
+                       $("select[name=selectSubcuenta]").change(function(){
+                       var idSubCuenta = $('select[name=selectSubcuenta]').val();
+                      // alert(idSubCuenta);
+                       buscarCuentas(idSubCuenta,12);
+
+                        });
+
+                      }); 
+
+
+                      $(document).ready(function(){
+
+                       $("select[name=cuentaPrincipalCrearCuenta]").change(function(){
+                       var idSubCuenta = $('select[name=cuentaPrincipalCrearCuenta]').val();
+                     // alert(idSubCuenta+' tipoCuenta '+8);
+                       buscarCuentaCuenta(idSubCuenta,8);
+
+                        });
+
+                      }); 
+
+                        $(document).ready(function(){
+
+                       $("select[name=cuentas]").change(function(){
+                       var idSubCuenta = $('select[name=cuentas]').val();
+                      // alert(idSubCuenta);
+                       buscarSubcuentas(idSubCuenta,3);
+
+                        });
+
+                      }); 
+  //buscamos subcuentaPrincipal
+
+                       function buscarSubcuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+                        //alert('hola');
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+'controller/crudCuentasContables.php',
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $('#selectSubcuenta').html(r);
+                           // $('.salida').html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+
+                    function buscarCuentaCuenta(idCuentaPrincipal,tipoCuenta){
+
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+'controller/crudCuentasContables.php',
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $('#selectSubcuenta2').html(r);
+                           //$('.salida').html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+                       function buscarCuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+                        //alert('hola');
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+'controller/crudCuentasContables.php',
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $('#conceptos').html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+                    function crearCuenta(){
+
+                       var datosGuardar= $("#crearCuenta").serialize();
+                      // alert(datosGuardar);
+                       
+                       $.ajax({
+                            type: "POST",
+                            url: uri1+'controller/crudCuentasContables.php',
+                            data: datosGuardar,
+
+                            success:function(r){
+
+                             // $('.salida').html(r);
+                              swal("Se creo la cuenta!", "felicidades!", "success");
+                               $('#modal3').modal('toggle');
+
+                                setInterval(function(){
+                                location.reload();
+
+                             },1000);
+
+                            }
+
+                          });
+                        
+
+                    }
+
 
 
     </script>

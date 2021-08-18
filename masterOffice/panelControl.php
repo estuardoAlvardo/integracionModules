@@ -333,6 +333,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                       <span class="nav-text">Pendientes Pago</span>
                     </a>
                 </li>
+
+                <li class="bold" style="<?php echo $archivos; ?>">
+                  <a href="gastos.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">pie_chart</i>
+                    <span class="nav-text">Gastos</span>
+                  </a>
+                </li>
                 <li class="bold" style="<?php echo $clienteyUsuarios; ?>">
                   <a href="clientesyUsuarios.php" class="waves-effect waves-cyan">
                       <i class="material-icons">person_pin</i>
@@ -365,6 +372,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   </a>
                 </li>
 
+                <li class="bold" style="<?php echo $archivos; ?>">
+                  <a href="nomenclatura.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">save</i>
+                    <span class="nav-text">Cuentas</span>
+                  </a>
+                </li>
+
               </ul>
             </li>
           </ul>
@@ -379,10 +393,10 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
           <!--start container-->
           <div class="container">
             <!--card stats start-->
-           
-            
+           <div class="row">
+
             <!--card widgets end-->
-            
+            </div>  
             <!--work collections start-->
             
             <!--work collections end-->

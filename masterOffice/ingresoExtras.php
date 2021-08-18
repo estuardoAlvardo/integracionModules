@@ -361,13 +361,14 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
           <div class="container">
               <div class="col s12">
             <div class="row">
+                <div class="salida2"></div>
+
               <div class="input-field col s11 m11 l11" style="margin-left: 20px;">
                 <i class="material-icons prefix">search</i>
                 <input type="text" id="txtBuscar" class="autocomplete" >
                 <label for="autocomplete">Buscar Cliente</label>
               </div>
             </div>
-              
                  <div class="row salida">
                    
                  </div>
@@ -518,10 +519,16 @@ var idServicio=$("#"+clicked_id+"idServicio").val();
 var eventoEjecutar=$("#"+clicked_id+"eventoEjecutar").val();
 var mesEnviar=$("#"+clicked_id+"txtMes").val();
 var fechaExtra=$("#"+clicked_id+"txtFecha").val();
+var idCuentaPrincipal=$("#cuentaPrincipal").val();
+var idCuenta=$("#selectSubcuenta").val();
+var idSubCuenta=$("#conceptos").val();
+var idEmpresaMaestra=$('#idEmpresaMaestra').val();
+var movimientoAbono=0;
+var movimientoCargo=1;
 
-
-alert("idEmpresa "+idCliente+" cantidad "+cantidad+" descripcion "+descripcion+" total "+total+" idServicio "+idServicio+ " eventoEjecutar "+eventoEjecutar+" mes transaccion "+mesEnviar+ " Fecha registro Extra"+ fechaExtra);
+//alert("idEmpresa "+idCliente+" cantidad "+cantidad+" descripcion "+descripcion+" total "+total+" idServicio "+idServicio+ " eventoEjecutar "+eventoEjecutar+" mes transaccion "+mesEnviar+ " Fecha registro Extra"+ fechaExtra+' idCuentaPrincipal '+idCuentaPrincipal+" idCuenta "+idCuenta+" idSubCuenta "+idSubCuenta+' idEmpresaMaestra '+idEmpresaMaestra+' movimientoAbono '+' movimientoCargo '+movimientoCargo);
       
+  
       $.ajax({
         type: "POST",
         url: uri1+"controller/ingresoExtrasC.php",
@@ -533,10 +540,19 @@ alert("idEmpresa "+idCliente+" cantidad "+cantidad+" descripcion "+descripcion+"
         "idServicio": idServicio,
         "eventoEjecutar": eventoEjecutar,
         "mesEnviar": mesEnviar,
-        "fechaRegistro": fechaExtra
+        "fechaRegistro": fechaExtra,
+        "idCuentaPrincipal":idCuentaPrincipal,
+        "idCuenta":idCuenta,
+        "idSubCuenta":idSubCuenta,
+        "idEmpresaMaestra":idEmpresaMaestra,
+        "movimientoAbono": movimientoAbono,
+        "movimientoCargo":movimientoCargo
+
 
       },
         success:function(r){
+
+            $('.salida2').html(r);
           
             M.toast({html: 'Se ha registrado el pago de manera correcta :)', classes: 'rounded'});
             
@@ -666,6 +682,140 @@ function registrarLogistica(){
     }
     setInterval(mostrarEventos,1000);
 
+
+
+//funciones para agregar cuenta por cobrar
+
+                     $(document).ready(function() {
+                       $("select[name=cuentaPrincipal]").change(function(){
+                       var idCuentaPrincipal = $("select[name=cuentaPrincipal]").val();
+                       //alert(idCuentaPrincipal);
+                       buscarSubcuentas(idCuentaPrincipal,1);
+                        });
+
+                     });
+
+                      
+
+
+                      $(document).ready(function(){
+
+                       $("select[name=cuentaPrincipalCrearCuenta]").change(function(){
+                       var idSubCuenta = $("select[name=cuentaPrincipalCrearCuenta]").val();
+                     // alert(idSubCuenta+" tipoCuenta "+8);
+                       buscarCuentaCuenta(idSubCuenta,8);
+
+                        });
+
+                      }); 
+
+                        $(document).ready(function(){
+
+                       $("select[name=cuentas]").change(function(){
+                       var idSubCuenta = $("select[name=cuentas]").val();
+                      // alert(idSubCuenta);
+                       buscarSubcuentas(idSubCuenta,3);
+
+                        });
+
+                      }); 
+  //buscamos subcuentaPrincipal
+
+                       function buscarSubcuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+                        //alert("hola");
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $("#selectSubcuenta").html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+
+                    function buscarCuentaCuenta(idCuentaPrincipal,tipoCuenta){
+
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $("#selectSubcuenta2").html(r);
+                           //$(".salida").html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+                       function buscarCuentas(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $("#conceptos").html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+                    function crearCuenta(){
+
+                       var datosGuardar= $("#crearCuenta").serialize();
+                      // alert(datosGuardar);
+                       
+                       $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: datosGuardar,
+
+                            success:function(r){
+
+                             // $(".salida").html(r);
+                              swal("Se creo la cuenta!", "felicidades!", "success");
+
+                                setInterval(function(){
+                                location.reload();
+
+                             },1000);
+
+                            }
+
+                          });
+                        
+
+                    }
+</script>
 
 
     </script>

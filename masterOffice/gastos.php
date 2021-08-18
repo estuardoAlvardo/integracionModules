@@ -88,9 +88,9 @@ if ($_SESSION['archivos']==1) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Ingreso Factura - <?php echo $_SESSION['nombre']; ?></title>
+	<title>masterOffice - <?php echo $_SESSION['nombre']; ?></title>
 	<link  rel="icon"   href="../img/logo.ico" type="image/ico" />
-      <!-- Compiled and minified CSS -->
+	    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!-- Compiled and minified JavaScript -->
@@ -101,6 +101,7 @@ if ($_SESSION['archivos']==1) {
   src="https://code.jquery.com/jquery-3.5.0.js"
   integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
   crossorigin="anonymous"></script>
+
 </head>
 <body>
 	
@@ -236,9 +237,16 @@ if ($_SESSION['archivos']==1) {
             <ul id="profile-dropdown" class="dropdown-content">
               <li>
                 <a href="#" class="grey-text text-darken-1">
-                  <i class="material-icons">face</i> Perfil</a>
+                  <i class="material-icons">face</i> Profile</a>
               </li>
-             
+              <li>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">settings</i> Settings</a>
+              </li>
+              <li>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">live_help</i> Help</a>
+              </li>
               <li class="divider"></li>
               <li>
                 <a href="#" class="grey-text text-darken-1">
@@ -277,7 +285,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                       <a href="perfil.php" class="grey-text text-darken-1">
                         <i class="material-icons">face</i> Perfil</a>
                     </li>
-                    
+                  
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
                         <i class="material-icons">keyboard_tab</i> Salir</a>
@@ -326,6 +334,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                       <span class="nav-text">Pendientes Pago</span>
                     </a>
                 </li>
+
+                <li class="bold" style="<?php echo $archivos; ?>">
+                  <a href="gastos.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">pie_chart</i>
+                    <span class="nav-text">Gastos</span>
+                  </a>
+                </li>
                 <li class="bold" style="<?php echo $clienteyUsuarios; ?>">
                   <a href="clientesyUsuarios.php" class="waves-effect waves-cyan">
                       <i class="material-icons">person_pin</i>
@@ -358,6 +373,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   </a>
                 </li>
 
+                <li class="bold" style="<?php echo $archivos; ?>">
+                  <a href="nomenclatura.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">save</i>
+                    <span class="nav-text">Cuentas</span>
+                  </a>
+                </li>
+
               </ul>
             </li>
           </ul>
@@ -369,217 +391,154 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <!-- //////////////////////////////////////////////////////////////////////////// -->
         <!-- START CONTENT -->
         <section id="content">
+          <!--start container-->
+          <div class="container">
+            <!--card stats start-->
+           <div class="row">
 
-      <h4 style="text-align: center;">Gestión de Factura</h4>
-
-          <div class="col s12">
-            <div class="row">
-              <div class="input-field col s11 m11 l11" style="margin-left: 20px;">
-                <i class="material-icons prefix">search</i>
-                <input type="text" id="txtBuscar" class="autocomplete" >
-                <label for="autocomplete">Buscar cliente (Ingresar Factura)</label>
-              </div>
-            </div>
-              
-                 <div class="row salida">
-                   
-                 </div>
-              
-          </div>
+            <div class="salida"></div>
+<?php 
 
 
+//buscamos cuentasPrincipales 2
+  $query26 = ("SELECT * FROM contaCuentaPrincipal");
+  $cuentaPrincipal6 = $dbConn->prepare($query26);
+  $cuentaPrincipal6->execute();
+  $hayCuentas6=$cuentaPrincipal6->rowCount();
+
+?>
+
+            <div class="col s12 m12 l12 card">
+              <p style="text-align: center; font-size:bold; font-size: 14pt;">Rellena la informacón de gastos</p>
+
+                <div class="row">
+                    <form  id="formularioIngresoGasto" class="col s12">
+                      <div style="display:block;">
+                  <p style="text-align: left; font-weight: bold; font-size: 12pt;">Seleccione las cuentas de Egreso</p>
+
+                    <select class="browser-default" name="cuentaPrincipal" id="cuentaPrincipal"  required>
+                           <option>Selecciona la cuenta de ingreso</option>';
+
+                  <?php   
+                          if($hayCuentas6==0){    ?>
+                    
+                  <option value="0">No hay cuentas!</option>
+               <?php         }else{  
+
+                    while ($datosCuentaPrincipal2=$cuentaPrincipal6->fetch(PDO::FETCH_ASSOC)){   ?>
+
+                 <option  value="<?php echo $datosCuentaPrincipal2['idRegistro']; ?>"><?php echo $datosCuentaPrincipal2['nomenclatura'].' '.$datosCuentaPrincipal2['cuentaPrincipal']; ?></option>
 
 
+                 <?php        } }    ?>
+                   </select><br>
 
-  
-
- <!-- Modal para insertar inicio -->
-                      <div id="modal1" class="modal">
-                        <div class="modal-content">
-                          <div class="col s12 m12 l12">
-                            <h5>Crear una nueva empresa </h5>
-                            <p class="chip indigo darken-4" style="color: white;">Para asignar la factua a un cliente debes conocer el codigo del cliente.</p>
-                             <p class="chip indigo darken-4" style="color: white;">Para reasignar una factura a otro mes debes colocar el codigo del mes.</p><br>
-                        <form id="actualizarFactura" >
-                          <input type="text" name="eventoEjecutar" id="eventoEjecutar" value="3" style="display: none;">
-                           <div class="row">
-                             <div class="input-field col s12 m12 l12 ">
-                              <input id="txtNoFactura" name="txtNoFactura" type="text" autofocus >
-                              <label for="first_name">No# Factura</label>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtFechaFactura" name="txtFechaFactura" type="text" autofocus disabled>
-                              <label for="first_name">Fecha Factura</label>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtNombreCliente" name="txtNombreCliente" type="text" autofocus disabled>
-                              <label for="first_name">Nombre Cliente</label>
-                            </div>
-                          </div>
-
-                           <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtCodigoCliente" name="txtCodigoCliente" type="text" autofocus>
-                              <label for="first_name">Codigo Cliente</label>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtNit" name="txtNit" type="text" autofocus disabled>
-                              <label for="first_name">Nit</label>
-                            </div>
-                          </div>
-                          
-
-                           <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtMontoFactura" name="txtMontoFactura" type="text" autofocus disabled>
-                              <label for="first_name">Monto Factura</label>
-                            </div>
-                          </div>
-
-                          <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                              <input id="txtCodigoMes" name="txtCodigoMes" type="number" autofocus>
-                              <label for="first_name">Codigo Mes</label>
-                            </div>
-                          </div>
-                           
-                           
+                          <select class="browser-default" name="selectSubcuenta" id="selectSubcuenta" required>
+                            <option>Selecciona una cuenta</option>
+                          </select><br>
 
 
-                          <div class="row">
-                            <div class="row">
-                              <div class="input-field col s8 m8 l8 left">
-                                <a class="modal-close btn waves-effect  indigo darken-4 right" onclick="insertarDatos11();">Guardar
-                                  <i class="material-icons right">send</i>
-                                </a>
-                              </div>
-                              <div class="col s1 m1 l1"></div>
-                              <div class="input-field col s3 m3 l3">
-                                <a href="#!" class="modal-close btn waves-effect waves-light right">Cerra
-                                  <i class="material-icons right">close</i>
-                                </a>
-                               
-                              </div>
-                            </div>
-                          </div>
-                        </form>
+                          <select class="browser-default" name="conceptos" id="conceptos"  required>
+                              <option>Selecciona una Sub-Cuenta</option>
+
+                           </select><br>
+
+                    <div class="input-field col s6">
+                      <input id="last_name" type="text" class="validate" name="facturaServicio">
+                      <label for="last_name">Factura de servicio</label>
+                    </div>
+
+                   <div class="input-field col s6">
+                      <input id="last_name" type="text" class="validate" name="descripcion">
+                      <label for="last_name">Descripción</label>
+                    </div>
+
+
+                   <div class="input-field col s6">
+                      <input id="last_name" type="text" class="validate" name="documentoSoporte">
+                      <label for="last_name">Documento soporte</label>
+                    </div>
+
+                                       <div class="input-field col s6">
+                      <input id="last_name" type="text" class="validate" id="montoPago" name="montoPago">
+                      <label for="last_name">Monto Pago Q.</label>
+                    </div>
+
+                    <input type="text" name="eventoEjecutar" value="1" style="display:none;">
+                    <input type="text" name="idEmpresaMaestra" value="<?php echo $_SESSION['empresa']; ?>" style="display: none;">
+
+                    <input name="abonoIngreso" type="text" value="0" style="display:none;">
+                    <input name="cargoIngreso" type="text" value="1" style="display:none;">
+                    <input name="abonoCuentaPorPagar" type="text" value="1" style="display:none;">
+                    <input name="cargoCuentaPorPagar" type="text" value="0" style="display:none;">
+
+
 
 
 
                   </div>
-                </div>
-              </div>
-             <!-- Modal para insertar fin  -->
+<?php 
 
 
+//buscamos cuentasPrincipales 2
+  $query27 = ("SELECT * FROM contaCuentaPrincipal");
+  $cuentaPrincipal6 = $dbConn->prepare($query27);
+  $cuentaPrincipal6->execute();
+  $hayCuentas6=$cuentaPrincipal6->rowCount();
+
+?>
 
 
+ <div style="display:block;">
+                  <p style="text-align: left; font-weight: bold; font-size: 12pt;">Seleccione las cuentas de gasto</p>
+
+                    <select class="browser-default" name="cuentaPrincipalGasto" id="cuentaPrincipalGasto"  required>
+                           <option>Selecciona la cuenta de gasto</option>';
+
+                  <?php   
+                          if($hayCuentas6==0){    ?>
+                    
+                  <option value="0">No hay cuentas!</option>
+               <?php         }else{  
+
+                    while ($datosCuentaPrincipal2=$cuentaPrincipal6->fetch(PDO::FETCH_ASSOC)){   ?>
+
+                 <option  value="<?php echo $datosCuentaPrincipal2['idRegistro']; ?>"><?php echo $datosCuentaPrincipal2['nomenclatura'].' '.$datosCuentaPrincipal2['cuentaPrincipal']; ?></option>
 
 
+                 <?php        } }    ?>
+                   </select><br>
+
+                          <select class="browser-default" name="selectSubcuentaGastos" id="selectSubcuentaGastos" required>
+                            <option>Selecciona una cuenta</option>
+                          </select><br>
 
 
+                          <select class="browser-default" name="conceptosGasto" id="conceptosGasto"  required>
+                              <option>Selecciona una Sub-Cuenta</option>
 
-       <div class="col s12">
-            <div class="row">
-              <div class="input-field col s11 m11 l11" style="margin-left: 20px;">
-                <i class="material-icons prefix">search</i>
-                <input type="text" id="txtBuscar2" class="autocomplete" >
-                <label for="autocomplete">Buscar Factura (ver factura)</label>
-              </div>
+                           </select><br>
+
+                  </div>
+                  <div class="col s6 m6 l6" style="padding:20px; margin-left: 75%;">
+                                      <a class="waves-effect waves-light btn"  onclick="ingresarGasto();">Registrar Gasto</a>
+                      </div>
+                    </form>
+                  </div>
             </div>
-              
-      <div class="row salida2">
 
-
-      </div>
-              
-  </div>
-
-
-
-
-
-
-
-
-
-             
-      <div class="row listadoFacturas">
-        <div class="col l1 m1 s1"></div>
-        <div class="col s10 m10 l10 card">
-          <h5 style="text-align: center;">Gestión de facturas</h5>
-        <table class="responsive-table striped centered">
-                    <thead>
-                      <tr>
-                          
-                          <th>Correlativo Factura</th>
-                          <th>Fecha Factura</th>
-                          <th>Cliente</th>
-                          <th>Codigo Mes</th>
-                          <th>Monto Factura</th>
-                          <th>Estado Factura</th>
-
-                      </tr>
-                    </thead>
-                    <tbody>
-<?php
-$query1 = ("SELECT * FROM factura order by numeroFactura desc");
-            $buscarFacturas1 = $dbConn->prepare($query1);
-            $buscarFacturas1->execute();
-
-
-
-
-while ($consultar1=$buscarFacturas1->fetch(PDO::FETCH_ASSOC)){
-
-if($consultar1['idCliente']==0){
-$estadoFactura='<p class="chip red accent-4" style="color:white;">Anulada</p>';
-
-}else{
-$estadoFactura='<p class="chip green accent-4" style="color:white;">Activa</p>';
-
-
-}
-
- ?>
-                      <tr>
-                        <td><?php echo $consultar1['numeroFactura']; ?></td>
-                        <td><?php echo $consultar1['fechaFactura']; ?></td>
-                        <td> <?php 
-            $query2 = ("SELECT razonSocial FROM empresa where idempresa=0 or idempresa=:idempresa");
-            $buscarEmpresas = $dbConn->prepare($query2);
-            $buscarEmpresas->bindParam(':idempresa', $consultar1['idCliente'], PDO::PARAM_INT); 
-            $buscarEmpresas->execute();
-
-  while ($consultar2=$buscarEmpresas->fetch(PDO::FETCH_ASSOC)){
-    
-
-    echo $consultar2['razonSocial'];}?></td>
-                        <td><?php echo $consultar1['codigoMes']; ?></td>
-                        <td>Q. <?php echo $consultar1['montoFactura']; ?></td>
-                        <td><?php echo $estadoFactura; ?></td>
-                      </tr>
-<?php } ?>
-                    </tbody>
-                  </table>
+            </div>  
+            <!--work collections start-->
+            
+            <!--work collections end-->
+            
+            <!-- //////////////////////////////////////////////////////////////////////////// -->
           </div>
-        
-      </div>
-  
-
-
-
-
+          <!--end container-->
         </section>
         <!-- END CONTENT -->
         <!-- START RIGHT SIDEBAR NAV-->
-       <aside id="right-sidebar-nav">
+        <aside id="right-sidebar-nav">
           <ul id="chat-out" class="side-nav rightside-navigation">
             <li class="li-hover">
               <div class="row">
@@ -602,13 +561,7 @@ $estadoFactura='<p class="chip green accent-4" style="color:white;">Activa</p>';
                 <div id="chatapp" class="col s12">
                   <h6 class="mt-5 mb-3 ml-3">REGISTRO LLAMADAS</h6>
                   <div id="registroLllamadasMostrar" class="collection border-none">
-                   <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color blue lighten-1">info_outline</i>
-                    </div>
-                    <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">No hay llamadas!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
-                    </div>
+                   
                     
                   </div>
                 </div>
@@ -616,14 +569,75 @@ $estadoFactura='<p class="chip green accent-4" style="color:white;">Activa</p>';
                   <h6 class="mt-5 mb-3 ml-3">EVENTOS RECIENTES</h6>
                   <div class="activity" id="registroEventos11">
                     <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">info_outline</i>
+                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">add_shopping_cart</i>
                     </div>
                     <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">Aun no hay eventos!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                      <a href="#" class="deep-purple-text medium-small">just now</a>
+                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jim Doe Purchased new equipments for zonal office.</p>
                     </div>
-                    
-
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color cyan lighten-2">airplanemode_active</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="cyan-text medium-small">Yesterday</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Your Next flight for USA will be on 15th August 2015.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color green lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="green-text medium-small">5 Days Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color amber lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="amber-text medium-small">1 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-orange lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-orange-text medium-small">2 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color brown lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="brown-text medium-small">1 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-purple lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-purple-text medium-small">3 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color grey lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="grey-text medium-small">1 Year Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -649,287 +663,16 @@ $estadoFactura='<p class="chip green accent-4" style="color:white;">Activa</p>';
         </div>
     </footer>
 
-    <p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
-        <p id="empresaMaestraEnviar" style="display: none;"><?php echo $_SESSION['empresa']; ?></p>
+<p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
+
 
     <script type="text/javascript">
 
-      
-   //uri general para todos los procesosa
+
+   //uri general para todos los procesos
     var uri1=$("#uriEnviar").text();
-    var empresaMaster=$("#empresaMaestraEnviar").text();;
 
-
-//busqueda de cliente
-$("#txtBuscar").keyup(function(){
-
-        var text = "txtBuscar="+$(this).val();
-               
-        $.ajax({
-          data:text,
-          url: uri1+'controller/ingresoFacturaC.php',
-          type: 'POST',
-          beforeSend: function(){ },
-          success: function (response){
-            $('.salida').html(response);
-
-          },
-          error: function(){
-            alert("error");
-          } 
-
-
-        });
-     
-
-
-      });
-
-//busqueda de facturas
-$("#txtBuscar2").keyup(function(){
-
-        var text1 = "txtBuscar2="+$(this).val();
-
-        $.ajax({
-          data:text1,
-          url: uri1+'controller/gestionFacturasC.php',
-          type: 'POST',
-          beforeSend: function(){ },
-          success: function (response){
-            $('.salida2').html(response);
-
-          },
-          error: function(){
-            alert("error");
-          } 
-
-
-        });
-     
-
-
-      });
-
-
-
-
-
-function mesActualCheck(idEmpresa,mes){
-   // alert(mes);
-
-    $("#"+idEmpresa+"txtMes").val(mes);
-}
-
-function mesAnteriorCheck(idEmpresa,mes){
-   // alert(mes);
-    $("#"+idEmpresa+"txtMes").val(mes);
-}
-
-
-function ingresarFactura(clicked_id){
-
-var idCliente=$("#"+clicked_id+"txtIdCliente").val();
-var noFactura=$("#"+clicked_id+"txtNoFactura").val();
-var fechaFactura=$("#"+clicked_id+"txtFechaFactura").val();
-var total=$("#"+clicked_id+"txtTotal").val();
-var mesTransaccion=$("#"+clicked_id+"txtMes").val();
-var eventoEjecutar=$("#"+clicked_id+"eventoEjecutar").val();
-var idCuentaPrincipal=$('#cuentaPrincipal').val();
-var idCuenta=$('#selectSubcuenta').val();
-var idSubCuenta=$('#conceptos').val();
-
-//es manual dependiendo de la vista y dependiendo del giro de negocio
-var cargo=1;
-var abono=0;
-
-
-
-//alert("idEmpresa "+idCliente+" No Factura "+noFactura+" fechaFactura "+fechaFactura+" total "+total+" mesTransaccion "+mesTransaccion+ " eventoEjecutar "+eventoEjecutar+' idCuentaPrincipal '+idCuentaPrincipal+' idcuenta '+idCuenta+' idSubCuenta '+idSubCuenta+' movimiento en abono '+cargo+' movimiento en cargo '+cargo+' empresaMaster '+empresaMaster);
-
-$.ajax({
-        type: "POST",
-        url: uri1+"controller/ingresoFacturaC.php",
-        data: {
-        "idCliente": idCliente,
-        "noFactura": noFactura,
-        "fechaFactura": fechaFactura,
-        "total": total,
-        "eventoEjecutar": eventoEjecutar,
-        "mesTransaccion": mesTransaccion,
-        "idCuentaPrincipal":idCuentaPrincipal,
-        "idCuenta":idCuenta,
-        "idSubCuenta":idSubCuenta,
-        "movimientoAbono":abono,
-        "movimientoCargo":cargo,
-        "idEmpresaMaestra":empresaMaster
-      },
-        success:function(r){
-            $('.salida2').html(r);
-            M.toast({html: 'Se ha ingresado la factura de manera correcta :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-
-
-}
-
-function anularFactura(idFactura,idEmpresa,estado){
-  //alert("idFactura"+ idFactura+ " idEmpresa "+idEmpresa+ "estado Check "+estado);
-
-  if(estado==false){
-  // alert('idFactura'+ idFactura+ " idEmpresa "+idEmpresa);
-
-    $.ajax({
-        type: "POST",
-        url: uri1+"controller/gestionFacturasC.php",
-        data: {
-        "idFactura": idFactura,
-        "idEmpresa": idEmpresa,
-        "eventoEjecutar": 2
-      },
-        success:function(r){
-          
-            M.toast({html: 'Se anulo la factura de manera correcta! :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-  }
-
-
-
-}
-
-$(document).ready(function () {
-    $('#modal1').modal();
-     $('select').formSelect();
-});
-
-
-
-function actualizarFactura(noFactura,fechaFactura,razonSocial,nit,montoFactura,codigoMes,idCliente){
- // alert("codigoMes: "+codigoMes);
-
- //alert('noFactura '+noFactura+ ' fechaFactura '+fechaFactura+ ' razonSocial '+razonSocial+' nit '+nit+' montoFactura '+montoFactura+ ' codigoMes '+' idCliente '+idCliente);
-
-$('#txtNoFactura').val(noFactura);
-$('#txtFechaFactura').val(fechaFactura);
-$('#txtNombreCliente').val(razonSocial);
-$('#txtCodigoCliente').val(idCliente);
-$('#txtCodigoMes').val(codigoMes);
-$('#txtNit').val(nit);
-$('#txtMontoFactura').val(montoFactura);
-
-  $("#modal1").modal();
-}
-
-
- function insertarDatos11(){
-      //datos los traemos con el formulario y con la propiedad serialize traemos todos los datos del formulario por el name
-      var datosGuardar= $("#actualizarFactura").serialize();
-      //alert(datosGuardar);
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/gestionfacturasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Se ha actualizado la factura de manera correcta :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-
-    }
-
-
-    //funcion para guardar registro Llamadas
-
-function crearRegistro(){
-
-    var datosGuardar= $("#formularioRegistro").serialize();
-      //alert(datosGuardar);
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Llamada registrada :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-}
-
-
-function registrarPedido(){
-
-  var datosGuardar= $("#formularioPedido").serialize();
-
-   $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Pedido creado de manera correcta! :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-}
-
-function registrarCita(){
-   var datosGuardar= $("#formularioCita").serialize();
-
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Cita Agendada! :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-
-}
-
-function registrarLogistica(){
-     var datosGuardar= $("#formularioLogistica").serialize();
-
-     //alert(datosGuardar);
-      $.ajax({
-        type: "POST",
-        url: uri1+"controller/registroLlamadasC.php",
-        data: datosGuardar,
-        success:function(r){
-          
-            M.toast({html: 'Se genero evento de logistica!! :)', classes: 'rounded'});
-            
-        }
-
-      });
-
-
-}
-
-
- function mostrarRegistroLlamadas(){
+               function mostrarRegistroLlamadas(){
       var registroLlamadas= $.ajax({
         url: uri1+"controller/staticLateralIzquierdoC.php",
         dataType: "text",
@@ -953,47 +696,56 @@ function registrarLogistica(){
 
     }
     setInterval(mostrarEventos,1000);
+    
 
-//funciones para agregar cuenta por cobrar
-
-                     $(document).ready(function() {
+                $(document).ready(function() {
                        $("select[name=cuentaPrincipal]").change(function(){
                        var idCuentaPrincipal = $("select[name=cuentaPrincipal]").val();
-                      // alert(idCuentaPrincipal);
+                       //alert(idCuentaPrincipal);
                        buscarSubcuentas(idCuentaPrincipal,1);
                         });
 
                      });
 
-                      
 
 
-                      $(document).ready(function(){
-
-                       $("select[name=cuentaPrincipalCrearCuenta]").change(function(){
-                       var idSubCuenta = $("select[name=cuentaPrincipalCrearCuenta]").val();
-                     // alert(idSubCuenta+" tipoCuenta "+8);
-                       buscarCuentaCuenta(idSubCuenta,8);
-
+                $(document).ready(function() {
+                       $("select[name=cuentaPrincipalGasto]").change(function(){
+                       var idCuentaPrincipal = $("select[name=cuentaPrincipalGasto]").val();
+                       //alert(idCuentaPrincipal);
+                       buscarSubcuentasGasto(idCuentaPrincipal,1);
                         });
 
-                      }); 
+                     });
 
-                        $(document).ready(function(){
 
-                       $("select[name=cuentas]").change(function(){
-                       var idSubCuenta = $("select[name=cuentas]").val();
+
+                       $(document).ready(function(){
+
+                       $("select[name=selectSubcuenta]").change(function(){
+                       var idSubCuenta = $("select[name=selectSubcuenta]").val();
                       // alert(idSubCuenta);
-                       buscarSubcuentas(idSubCuenta,3);
+                       buscarCuentas(idSubCuenta,12);
 
                         });
 
                       }); 
-  //buscamos subcuentaPrincipal
 
-                       function buscarSubcuentas(idCuentaPrincipal,tipoCuenta){
+
+
+                       $(document).ready(function(){
+
+                       $("select[name=selectSubcuentaGastos]").change(function(){
+                       var idSubCuenta = $("select[name=selectSubcuentaGastos]").val();
+                      // alert(idSubCuenta);
+                       buscarCuentasGastos(idSubCuenta,12);
+
+                        });
+
+                      }); 
+  function buscarSubcuentas(idCuentaPrincipal,tipoCuenta){
                         //tipoCuenta  1=subCuenta 2=concepto
-                        //alert("hola");
+                      //  alert('idCuentaPrincipal'+idCuentaPrincipal);
                         $.ajax({
                             type: "POST",
                             url: uri1+"controller/crudCuentasContables.php",
@@ -1011,8 +763,32 @@ function registrarLogistica(){
 
                           });
 
+
+
                     }
 
+  function buscarSubcuentasGasto(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+                      //  alert('idCuentaPrincipal'+idCuentaPrincipal);
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+                              $(".salida2").html(r);
+
+                              $("#selectSubcuentaGastos").html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
 
                     function buscarCuentaCuenta(idCuentaPrincipal,tipoCuenta){
 
@@ -1059,6 +835,30 @@ function registrarLogistica(){
 
                     }
 
+                    function buscarCuentasGastos(idCuentaPrincipal,tipoCuenta){
+                        //tipoCuenta  1=subCuenta 2=concepto
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/crudCuentasContables.php",
+                            data: {
+                            "idBuscar": idCuentaPrincipal,
+                            "tipoCuenta": tipoCuenta
+                            },
+
+                            success:function(r){
+
+                              $("#conceptosGasto").html(r);
+
+                         
+                            }
+
+                          });
+
+                    }
+
+
                     function crearCuenta(){
 
                        var datosGuardar= $("#crearCuenta").serialize();
@@ -1085,6 +885,37 @@ function registrarLogistica(){
                         
 
                     }
+
+//ingreso de gasto 
+
+      function ingresarGasto(){
+
+         var datosGuardar= $("#formularioIngresoGasto").serialize();
+                       //alert(datosGuardar);
+                      
+                       $.ajax({
+                            type: "POST",
+                            url: uri1+"controller/ingresoGastosC.php",
+                            data: datosGuardar,
+
+                            success:function(r){
+
+                             // $(".salida").html(r);
+
+                          M.toast({html: 'Se ha ingresado el gasto de manera correcta :)', classes: 'rounded'});
+
+                                setInterval(function(){
+                                location.reload();
+
+                             },1000);
+
+                            }
+
+                          });
+                       
+
+
+      }
 
     </script>
     <!-- END FOOTER -->
